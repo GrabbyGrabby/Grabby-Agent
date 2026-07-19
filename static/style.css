@@ -256,6 +256,45 @@ body {
     line-height: 1.6;
 }
 
+.msg-bubble p {
+    margin-bottom: 12px;
+}
+
+.msg-bubble p:last-child {
+    margin-bottom: 0;
+}
+
+.msg-bubble ul, .msg-bubble ol {
+    margin-left: 24px;
+    margin-bottom: 12px;
+}
+
+.msg-bubble li {
+    margin-bottom: 6px;
+}
+
+.msg-bubble h1, .msg-bubble h2, .msg-bubble h3 {
+    font-family: var(--font-header);
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.msg-bubble h1 { font-size: 20px; }
+.msg-bubble h2 { font-size: 18px; }
+.msg-bubble h3 { font-size: 16px; }
+
+.msg-bubble a {
+    color: #818cf8;
+    text-decoration: underline;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.msg-bubble a:hover {
+    color: #c084fc;
+}
+
 .user-message .msg-bubble {
     background: var(--primary-gradient);
     border-bottom-right-radius: 4px;
@@ -419,4 +458,133 @@ body {
         max-width: 90%;
     }
 }
+
+/* Welcome Dashboard Styles */
+.welcome-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    margin: auto;
+    max-width: 1000px;
+    width: 100%;
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dashboard-header {
+    text-align: center;
+}
+
+.dashboard-header h2 {
+    font-family: var(--font-header);
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    background: linear-gradient(to right, #ffffff, var(--text-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dashboard-header p {
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.dashboard-card {
+    background: rgba(22, 24, 37, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    background: rgba(30, 32, 50, 0.6);
+}
+
+.card-icon {
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+
+.dashboard-card h3 {
+    font-family: var(--font-header);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.dashboard-card p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    flex-grow: 1;
+}
+
+.card-badge {
+    align-self: flex-start;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Customized glowing hover states */
+.card-blue:hover {
+    border-color: rgba(96, 165, 250, 0.5);
+    box-shadow: 0 10px 30px rgba(96, 165, 250, 0.1);
+}
+.card-blue .card-badge {
+    color: #93c5fd;
+    border-color: rgba(147, 197, 253, 0.2);
+}
+
+.card-purple:hover {
+    border-color: rgba(192, 132, 252, 0.5);
+    box-shadow: 0 10px 30px rgba(192, 132, 252, 0.1);
+}
+.card-purple .card-badge {
+    color: #d8b4fe;
+    border-color: rgba(216, 180, 254, 0.2);
+}
+
+.card-amber:hover {
+    border-color: rgba(251, 191, 36, 0.5);
+    box-shadow: 0 10px 30px rgba(251, 191, 36, 0.1);
+}
+.card-amber .card-badge {
+    color: #fde047;
+    border-color: rgba(253, 224, 71, 0.2);
+}
+
+.card-green:hover {
+    border-color: rgba(52, 211, 153, 0.5);
+    box-shadow: 0 10px 30px rgba(52, 211, 153, 0.1);
+}
+.card-green .card-badge {
+    color: #6ee7b7;
+    border-color: rgba(110, 231, 183, 0.2);
+}
+
 

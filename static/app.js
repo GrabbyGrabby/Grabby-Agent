@@ -8,9 +8,18 @@ const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 const sessionList = document.getElementById('session-list');
 const newChatBtn = document.getElementById('new-chat-btn');
-const syncDnsBtn = document.getElementById('sync-dns-btn');
 const currentSessionTitle = document.getElementById('current-session-title');
 const systemStatus = document.getElementById('system-status');
+
+// Configure marked links to open in a new tab
+const renderer = new marked.Renderer();
+renderer.link = function(linkObj) {
+    const href = linkObj.href;
+    const title = linkObj.title || '';
+    const text = linkObj.text;
+    return `<a href="${href}" title="${title}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+};
+marked.setOptions({ renderer: renderer });
 
 // Initialize Application
 function init() {
@@ -29,7 +38,6 @@ function init() {
         const id = 'session-' + Date.now();
         createNewSession(id);
     });
-    syncDnsBtn.addEventListener('click', triggerDnsSync);
 
     // Mobile sidebar toggle
     const menuToggle = document.getElementById('menu-toggle');
@@ -138,8 +146,20 @@ function renderMessages(messages) {
     messages.forEach(msg => {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${msg.role}-message`;
+        
+        // Parse markdown for agent and system messages, plain text for user messages
+        let contentHtml = msg.content;
+        if (msg.role !== 'user') {
+            contentHtml = marked.parse(msg.content);
+        } else {
+            // escape html tags in user inputs to prevent injection
+            const tempDiv = document.createElement('div');
+            tempDiv.textContent = msg.content;
+            contentHtml = tempDiv.innerHTML;
+        }
+
         msgDiv.innerHTML = `
-            <div class="msg-bubble">${msg.content}</div>
+            <div class="msg-bubble">${contentHtml}</div>
         `;
         messagesContainer.appendChild(msgDiv);
     });
@@ -205,26 +225,6 @@ function setLoadingState(isLoading) {
         sendBtn.disabled = false;
         sendBtn.innerHTML = '<span>Send</span>';
         systemStatus.innerHTML = '<span class="status-indicator online"></span> Fallback Agent Engine: Active';
-    }
-}
-
-// Trigger DNS record sync
-async function triggerDnsSync() {
-    syncDnsBtn.disabled = true;
-    syncDnsBtn.textContent = 'Syncing...';
-    try {
-        const response = await fetch('/api/dns-sync', { method: 'POST' });
-        const data = await response.json();
-        if (data.status === 'success') {
-            alert('DNS record synced successfully!');
-        } else {
-            alert('DNS sync completed, but it might have been skipped. Check backend logs.');
-        }
-    } catch (err) {
-        alert(`Error syncing DNS: ${err.message}`);
-    } finally {
-        syncDnsBtn.disabled = false;
-        syncDnsBtn.textContent = 'Sync DNS';
     }
 }
 

@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="glass-bg"></div>
@@ -32,17 +33,6 @@
                 </ul>
             </div>
 
-            <div class="sidebar-footer">
-                <div class="dns-status-card">
-                    <div class="dns-info">
-                        <span class="dns-label">Cloudflare Domain</span>
-                        <span id="dns-domain-val" class="dns-val">grabby.qzz.io</span>
-                    </div>
-                    <button id="sync-dns-btn" class="btn btn-secondary btn-icon" title="Sync DNS record to this server">
-                        Sync DNS
-                    </button>
-                </div>
-            </div>
         </aside>
 
         <!-- Main Chat Area -->
@@ -56,9 +46,40 @@
             </header>
 
             <div id="messages-container" class="messages-container">
-                <div class="message system-message">
-                    <div class="msg-bubble">
-                        Welcome to Grabby AI agent console! Ask me anything. I can search the web, calculate word count, and fall back to multiple free API providers (Groq, Gemini, OpenRouter, Nvidia NIM) dynamically.
+                <div id="welcome-dashboard" class="welcome-dashboard">
+                    <div class="dashboard-header">
+                        <h2>Agent Capabilities Dashboard</h2>
+                        <p>Grabby is a zero-cost, multi-provider autonomous agent with tool execution and session-level memory.</p>
+                    </div>
+                    
+                    <div class="cards-grid">
+                        <div class="dashboard-card card-blue">
+                            <div class="card-icon">🔍</div>
+                            <h3>Web Search Tool</h3>
+                            <p>Runs real-time web searches using DuckDuckGo DDGS when queries require fresh information.</p>
+                            <span class="card-badge">Active</span>
+                        </div>
+                        
+                        <div class="dashboard-card card-purple">
+                            <div class="card-icon">📝</div>
+                            <h3>Word Counter</h3>
+                            <p>Executes a custom Python tool function dynamically to count characters and word sequences.</p>
+                            <span class="card-badge">Active</span>
+                        </div>
+                        
+                        <div class="dashboard-card card-amber">
+                            <div class="card-icon">🛡️</div>
+                            <h3>API Failover Guard</h3>
+                            <p>Dynamic model failover chain: Gemini 2.5 Flash &rarr; OpenRouter &rarr; Nvidia NIM &rarr; Mistral.</p>
+                            <span class="card-badge">Active</span>
+                        </div>
+                        
+                        <div class="dashboard-card card-green">
+                            <div class="card-icon">🌐</div>
+                            <h3>Cloudflare DNS Sync</h3>
+                            <p>Automated record creation mapping your host IP to <code>grabby.qzz.io</code> with single-click checks.</p>
+                            <span class="card-badge">Active</span>
+                        </div>
                     </div>
                 </div>
             </div>
