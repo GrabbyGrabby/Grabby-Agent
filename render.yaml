@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: grabby-agent
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: HOST
+        value: 0.0.0.0
+      - key: GEMINI_API_KEY
+        sync: true
+      - key: OPENROUTER_API_KEY
+        sync: true
+      - key: NVIDIA_NIM_API_KEY
+        sync: true
+      - key: MISTRAL_API_KEY
+        sync: true
+      - key: DIGITALPLAT_API_KEY
+        sync: true

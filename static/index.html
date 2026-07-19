@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grabby AI - Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="glass-bg"></div>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo"></div>
+                <h1>Grabby AI</h1>
+            </div>
+            
+            <div class="sidebar-section">
+                <button id="new-chat-btn" class="btn btn-primary">
+                    <span class="plus-icon">+</span> New Session
+                </button>
+            </div>
+
+            <div class="sessions-container">
+                <h3>Active Sessions</h3>
+                <ul id="session-list" class="session-list">
+                    <!-- Session items inserted by JS -->
+                </ul>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="dns-status-card">
+                    <div class="dns-info">
+                        <span class="dns-label">Cloudflare Domain</span>
+                        <span id="dns-domain-val" class="dns-val">grabby.qzz.io</span>
+                    </div>
+                    <button id="sync-dns-btn" class="btn btn-secondary btn-icon" title="Sync DNS record to this server">
+                        Sync DNS
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+            <header class="chat-header">
+                <div class="session-info">
+                    <h2 id="current-session-title">Session: default-session</h2>
+                    <p id="system-status"><span class="status-indicator online"></span> Fallback Agent Engine: Active</p>
+                </div>
+            </header>
+
+            <div id="messages-container" class="messages-container">
+                <div class="message system-message">
+                    <div class="msg-bubble">
+                        Welcome to Grabby AI agent console! Ask me anything. I can search the web, calculate word count, and fall back to multiple free API providers (Groq, Gemini, OpenRouter, Nvidia NIM) dynamically.
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <form id="chat-form" class="chat-form">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        placeholder="Ask Grabby to search the web or do something..." 
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="submit" id="send-btn" class="btn btn-primary send-btn">
+                        <span>Send</span>
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/static/app.js"></script>
+</body>
+</html>
