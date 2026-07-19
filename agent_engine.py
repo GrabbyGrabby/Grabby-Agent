@@ -2,7 +2,7 @@ import os
 import logging
 from dotenv import load_dotenv
 from langchain.tools import tool
-from langchain_community.tools import DuckDuckGoSearchRun
+from duckduckgo_search import DDGS
 from langchain_groq import ChatGroq
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
@@ -15,7 +15,21 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger("agent_engine")
 
 # 1. Define Tools
-search = DuckDuckGoSearchRun()
+@tool
+def search(query: str) -> str:
+    """Search the web for up-to-date information on a topic."""
+    try:
+        # Use ddgs directly with a strict 2.5 second timeout to stay within Vercel's limits
+        with DDGS(timeout=2.5) as ddgs:
+            results = list(ddgs.text(query, max_results=3))
+            if not results:
+                return "No search results found."
+            formatted = []
+            for r in results:
+                formatted.append(f"Title: {r.get('title')}\nLink: {r.get('href')}\nSnippet: {r.get('body')}\n")
+            return "\n".join(formatted)
+    except Exception as e:
+        return f"Search tool timed out or failed: {str(e)}"
 
 @tool
 def word_count(text: str) -> int:
