@@ -40,79 +40,80 @@ tools = [search, word_count]
 
 # 2. Model Fallback Factory
 def get_model():
-    """Attempt to initialize models in order of priority: Groq -> Gemini -> OpenRouter -> Nvidia."""
+    """Attempt to initialize models in order of priority, linking them with dynamic runtime fallbacks."""
+    models_list = []
     
     # Priority 1: Gemini
     gemini_key = os.getenv("GEMINI_API_KEY")
     if gemini_key:
         try:
-            logger.info("Attempting to initialize Google Gemini model...")
+            logger.info("Configuring Google Gemini model...")
             model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=gemini_key)
-            model.invoke("ping")  # verify API works
-            logger.info("Successfully connected to Google Gemini.")
-            return model
+            models_list.append(model)
         except Exception as e:
-            logger.warning(f"Google Gemini initialization failed: {e}")
+            logger.error(f"Error configuring Gemini model: {e}")
     else:
         logger.info("Gemini API key not provided.")
-
+ 
     # Priority 2: OpenRouter
     openrouter_key = os.getenv("OPENROUTER_API_KEY")
     if openrouter_key:
         try:
-            logger.info("Attempting to initialize OpenRouter model...")
+            logger.info("Configuring OpenRouter model...")
             model = ChatOpenAI(
                 model="meta-llama/llama-3.3-70b-instruct:free",
                 api_key=openrouter_key,
                 base_url="https://openrouter.ai/api/v1"
             )
-            model.invoke("ping")
-            logger.info("Successfully connected to OpenRouter (Llama 3.3 70B).")
-            return model
+            models_list.append(model)
         except Exception as e:
-            logger.warning(f"OpenRouter initialization failed: {e}")
+            logger.error(f"Error configuring OpenRouter model: {e}")
     else:
         logger.info("OpenRouter API key not provided.")
-
+ 
     # Priority 3: Nvidia NIM
     nvidia_key = os.getenv("NVIDIA_API_KEY") or os.getenv("NVIDIA_NIM_API_KEY")
     if nvidia_key:
         try:
-            logger.info("Attempting to initialize Nvidia NIM model...")
+            logger.info("Configuring Nvidia NIM model...")
             model = ChatOpenAI(
                 model="meta/llama-3.3-70b-instruct",
                 api_key=nvidia_key,
                 base_url="https://integrate.api.nvidia.com/v1"
             )
-            model.invoke("ping")
-            logger.info("Successfully connected to Nvidia NIM.")
-            return model
+            models_list.append(model)
         except Exception as e:
-            logger.warning(f"Nvidia NIM initialization failed: {e}")
+            logger.error(f"Error configuring Nvidia NIM model: {e}")
     else:
         logger.info("Nvidia API key not provided.")
-
+ 
     # Priority 4: Mistral AI
     mistral_key = os.getenv("MISTRAL_API_KEY")
     mistral_url = os.getenv("MISTRAL_BASE_URL", "https://api.mistral.ai/v1")
     if mistral_key:
         try:
-            logger.info("Attempting to initialize Mistral model...")
+            logger.info("Configuring Mistral model...")
             model = ChatOpenAI(
                 model="mistral-large-latest",
                 api_key=mistral_key,
                 base_url=mistral_url
             )
-            model.invoke("ping")
-            logger.info("Successfully connected to Mistral AI.")
-            return model
+            models_list.append(model)
         except Exception as e:
-            logger.warning(f"Mistral AI initialization failed: {e}")
+            logger.error(f"Error configuring Mistral model: {e}")
     else:
         logger.info("Mistral API key not provided.")
-
-    # Ultimate fallback: Raise error if no models can be loaded
-    raise RuntimeError("No LLM providers could be initialized. Please check your API keys in the .env file.")
+ 
+    if not models_list:
+        raise RuntimeError("No LLM keys configured. Please add GEMINI_API_KEY or OPENROUTER_API_KEY to your Environment Variables.")
+ 
+    # Apply the fallback chain
+    primary_model = models_list[0]
+    if len(models_list) > 1:
+        logger.info(f"Configuring dynamic fallback chain: {', '.join([type(m).__name__ for m in models_list])}")
+        return primary_model.with_fallbacks(models_list[1:])
+    else:
+        return primary_model
 
 # 3. Create the Agent
 def get_agent():
