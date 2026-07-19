@@ -194,7 +194,14 @@ async function handleSendMessage(e) {
         });
         
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            let errorDetail = `HTTP error! status: ${response.status}`;
+            try {
+                const errData = await response.json();
+                if (errData && errData.detail) {
+                    errorDetail = errData.detail;
+                }
+            } catch (jsonErr) {}
+            throw new Error(errorDetail);
         }
         
         const data = await response.json();
