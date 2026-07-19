@@ -1,5 +1,9 @@
 import os
+import sys
 import logging
+# Add parent directory to sys.path so it can find agent_engine and cloudflare_dns
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -105,13 +109,10 @@ async def dns_sync_endpoint():
         logger.error(f"Error triggering DNS sync: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# Serve static web interface
-static_dir = os.path.join(os.path.dirname(__file__), "static")
-if not os.path.exists(static_dir):
-    os.makedirs(static_dir)
-
-# Mount the static files
-app.mount("/static", StaticFiles(directory=static_dir), name="static")
+# Mount static folder for local runs (Vercel ignores this and serves static directory directly)
+static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 @app.get("/")
 async def get_index():
@@ -119,9 +120,3 @@ async def get_index():
     if os.path.exists(index_path):
         return FileResponse(index_path)
     return {"message": "Server is running, but static/index.html is missing."}
-
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.getenv("PORT", 8000))
-    host = os.getenv("HOST", "0.0.0.0")
-    uvicorn.run("main:app", host=host, port=port, reload=True)
