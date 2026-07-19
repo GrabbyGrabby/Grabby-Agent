@@ -30,6 +30,22 @@ function init() {
         createNewSession(id);
     });
     syncDnsBtn.addEventListener('click', triggerDnsSync);
+
+    // Mobile sidebar toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    const chatArea = document.querySelector('.chat-area');
+
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('open');
+        });
+
+        chatArea.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+        });
+    }
 }
 
 // Session Functions
@@ -83,6 +99,11 @@ function switchSession(id) {
     }
     
     renderSessions();
+
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        sidebar.classList.remove('open');
+    }
 }
 
 function deleteSession(id) {
