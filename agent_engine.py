@@ -14,7 +14,7 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("agent_engine")
 
-# 1. Define Tools
+# 1. Define tools
 @tool
 def search(query: str) -> str:
     """Search the web for up-to-date information on a topic."""
