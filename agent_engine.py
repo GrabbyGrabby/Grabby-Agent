@@ -17,7 +17,7 @@ logger = logging.getLogger("agent_engine")
 # 1. Define tools
 @tool
 def search(query: str) -> str:
-    """Search the web for up-to-date information on a topic."""
+    """Search the web for up-to-date information on a topicS."""
     try:
         # Use ddgs directly with a strict 2.5 second timeout to stay within Vercel's limits
         with DDGS(timeout=2.5) as ddgs:
